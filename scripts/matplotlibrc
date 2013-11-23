@@ -1,0 +1,22 @@
+# For QTConsole!
+backend :  QT4Agg
+
+axes.color_cycle : RoyalBlue, Crimson, LimeGreen, DarkOrange, BlueViolet
+
+font.family : sans-serif
+font.size : 8
+font.sans-serif : Bitstream Vera Sans, Lucida Grande, Verdana
+
+mathtext.default : regular
+
+legend.numpoints : 1
+legend.frameon : False
+
+figure.figsize : 4,4
+figure.dpi : 150
+figure.subplot.left    : 0.175 # the left side of the subplots of the figure
+figure.subplot.right   : 0.9   # the right side of the subplots of the figure
+figure.subplot.bottom  : 0.175   # the bottom of the subplots of the figure
+figure.subplot.top     : 0.9    # the top of the subplots of the figure
+figure.subplot.wspace  : 0.3    # the amount of width reserved for blank space between subplots
+figure.subplot.hspace  : 0.3    # the amount of height reserved for white space between subplots
