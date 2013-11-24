@@ -19,12 +19,12 @@ def save(name, meta, **kw):
     * meta : meta information on the measurement
     * all other kws are regarded as data
     """
-    
+
     do_plot = kw.pop('do_plot', True)
-    
+
     # check if we already have qtlab data
     qtlab_data = kw.pop('qtlab_data', None)
-    if qtlab_data == None:  
+    if qtlab_data == None:
         try:
             from wp_setup import state
             keyword = state.info['keyword']
@@ -35,24 +35,24 @@ def save(name, meta, **kw):
             name = name + '_' + keyword.replace(' ', '')
 
         path = dummy_qtlab_measurement(name, meta)
-        
+
     else:
         path, ext = os.path.splitext(qtlab_data.get_filepath())
 
     numpy.savez(path, **kw)
-    
+
     if do_plot:
         # debug - look how long plotting takes
         # t0 = time.time()
         save_data_plot(path + '.npz')
         # t1 = time.time()
         # print 'plotting time: %.3fs' % (t1-t0)
-    
+
 
 def dummy_qtlab_measurement(name, meta=''):
     """
     Expects a name (we just use the qtlab naming routines) and optionally
-    a meta string. 
+    a meta string.
     Creates a 'dummy' qtlab measurement, where the data file only contains
     the meta string. returns the base path (qtlab file names w/o extension),
     can be used to save other stuff in the same place.
@@ -63,12 +63,12 @@ def dummy_qtlab_measurement(name, meta=''):
     d = Data(name=name)
     d.add_comment(meta)
     d.create_file()
-    d.close_file()    
+    d.close_file()
     path, ext = os.path.splitext(d.get_filepath())
     return path
 
 def title_from_path(filepath):
-    
+
     # auto generate a title. use format 'date/time_name' from the
     # qtlab save path
     title = ''
@@ -83,7 +83,7 @@ def title_from_path(filepath):
 def xymatrix_from_dat(filepath, xcol=0, ycol=1):
     d = loadtxt(filepath)
     rows, cols = d.shape
-    
+
     xlen = 1
     while d[xlen,xcol] != d[0,xcol]:
         xlen+=1
@@ -100,11 +100,11 @@ def xymatrix_from_dat(filepath, xcol=0, ycol=1):
 ### Data plotting with help of matplotlib
 def save_data_plot(filepath, **kw):
     fig = plot_data(filepath, **kw)
-    
+
     if fig:
         basepath, ext = os.path.splitext(filepath)
         figpath = basepath + '.png'
-    
+
         # dont overwrite existing figures but find suitable alt name,
         # by appending an (increasing) number
         i = 0
@@ -117,7 +117,7 @@ def save_data_plot(filepath, **kw):
                     b = b[:-1]
                 figpath = b + str(i) + e
             i += 1
-        
+
         fig.savefig(figpath, format='png')
         fig.clf()
         pyplot.close(fig)
@@ -136,7 +136,7 @@ def plot_data(filepath, **kw):
     arrays = data.items()
     keys = data.keys()
     title = title_from_path(filepath)
-   
+
     # try to figure out what kind of data we're dealing with here
     # kind of data should be deducable from the array names
     fig = None
@@ -172,7 +172,7 @@ def plot_data(filepath, **kw):
                 fig = lineplot(title, data, x[0], lines)
 
     return fig
-    
+
 
 
 def title_from_path(path):
@@ -220,20 +220,20 @@ def colorplot(name, data, xname, yname, zname, **kw):
     """
     docstring
     """
-    extent = kw.pop('extent', 
+    extent = kw.pop('extent',
         (data[xname][0], data[xname][-1], data[yname][0], data[yname][-1]))
     cmap = kw.pop('cmap', DEFAULT_CMAP)
     origin = kw.pop('origin', 'lower')
 
     try:
-        fig = pyplot.figure()        
-        pyplot.imshow(data[zname], 
+        fig = pyplot.figure()
+        pyplot.imshow(data[zname],
         	interpolation='nearest',
         	origin=origin,
-        	extent=extent, 
-           	cmap=cmap, 
+        	extent=extent,
+           	cmap=cmap,
             	**kw)
-        
+
         cb = pyplot.colorbar()
         pyplot.title(name)
     except:
