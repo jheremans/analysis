@@ -1,0 +1,31 @@
+import os
+from numpy import *
+import pylab as plt
+from analysis.lib.fitting import fit, common
+from analysis.lib.tools import plot
+from analysis.lib.spin import spin_control as sc
+from matplotlib import rc
+from mpl_toolkits.mplot3d import Axes3D
+
+data_1ns=np.load(r'D:\machielblok\Desktop\PhD\QTlab\data\Weak_Value\data_1ns.npz')
+data_1ns=np.load(r'D:\machielblok\Desktop\PhD\QTlab\data\Weak_Value\data_30ns.npz')
+data_100ns=np.load(r'D:\machielblok\Desktop\PhD\QTlab\data\Weak_Value\data_100ns.npz')
+'''
+fig=plt.figure()
+ax=fig.add_subplot(111)
+width=0.2
+x=np.arange(4)
+
+barall=ax.bar(x, res_FS,width, yerr=ures_FS, color='RoyalBlue')
+barfee=ax.bar(x+width, res_SN, width, yerr=ures_SN,color='Crimson')
+barher=ax.bar(x+2*width, res_Succes, width, yerr=ures_Succes,color='DarkGreen')
+baride=ax.bar(x+3*width, ideal, width, color='White')
+ax.plot([0,3],[0,0],color='Black')
+
+ax.set_title('Final State (tau=50ns,RO 2 us)')
+ax.set_xticks(x+width*2)
+ax.set_ylim([-1,1])
+ax.set_xticklabels( ('<Sz>','<Sx>', '<Sy>') )
+ax.legend( (barall[0], barfee[0],barher[0],baride[0]), ('2 measurements', '1 measurement','All Succes','Target'), prop={'size':10})
+plt.show()
+'''

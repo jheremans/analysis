@@ -1,0 +1,3 @@
+LIBRARY T2_filter.pyd
+EXPORTS
+initT2_filter

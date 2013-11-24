@@ -1,0 +1,69 @@
+
+import numpy as np
+import pylab as plt
+from analysis.lib.spin import spin_control as sc
+import os
+from mpl_toolkits.mplot3d import Axes3D
+
+
+def make_rho(z,x):
+
+    rho=np.array([[x,z],[1-z,x]])
+    return rho
+def make_rho_ideal(tau,input='X'):
+    s=calc_meas_strength(tau,12.,2400.)
+    x=np.cos(s*np.pi/2.)/2.
+    z=np.sin(np.pi+s*np.pi/2.)/2.+0.5
+    rho_cond=make_rho(1-z,x)
+    rho_uncond=make_rho(0.5,x)
+    return rho_cond, rho_uncond,s
+def make_hist(data,ideal=np.array([[0.5,0.5],[0.5,0.5]]),title=''):
+    column_names = ['','']
+    row_names = ['','']
+
+    fig = plt.figure()
+    ax = Axes3D(fig)
+
+    lx= len(data[0])            # Work out matrix dimensions
+    ly= len(data[:,0])
+    xpos = np.arange(0,lx,1)    # Set up a mesh of positions
+    ypos = np.arange(0,ly,1)
+    xpos, ypos = np.meshgrid(xpos+0.25, ypos+0.25)
+
+    xpos = xpos.flatten()   # Convert positions to 1D array
+    ypos = ypos.flatten()
+    zpos = np.zeros(lx*ly)
+
+    dx = 0.75 * np.ones_like(zpos)
+    dy = dx.copy()
+    dz = data.flatten()
+
+    dzideal = ideal.flatten()
+
+    ax.bar3d(xpos,ypos,zpos, dx, dy, dz, color='RoyalBlue',alpha=0.65)
+    ax.bar3d(xpos,ypos,zpos, dx, dy, dzideal, color='b',alpha=0)
+    
+    
+    ax.w_xaxis.set_ticklabels(column_names)
+    ax.w_yaxis.set_ticklabels(row_names)
+    ax.set_zlim3d([0,1])
+    ax.set_zlabel('')
+    ax.set_title(title)
+    plt.show()
+def calc_meas_strength(x,t_zero=12.,t_star=1400.):
+    measstren=theta(x,t_zero,t_star)/90.
+    return measstren
+def theta(tau,t_zero,t_star):
+    return 90-2*(np.arccos(sqrt(S(tau,t_zero,t_star))))*180./np.pi
+
+def S(tau,t_zero,t_star):
+    return np.exp(-(tau/t_star)**2)*np.cos(np.pi/4-(tau+t_zero)*np.pi*.002185/2.)**2
+def calc_fidelity_psi(tau,z,x,th='',t_zero=12,t_star=1400):
+    if th=='':
+        angle = theta(tau,t_zero,t_star)
+    else:
+	angle=th
+    fmI0=(1/2.)+x*np.cos(np.pi*angle/180.)+(z-(1/2.))*np.sin(np.pi*angle/180.)
+    fmI1=(1/2.)+x*np.cos(np.pi*angle/180.)+((1/2.)-z)*np.sin(np.pi*angle/180.)
+    return fmI0,fmI1 
+
